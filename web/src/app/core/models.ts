@@ -1,6 +1,7 @@
 export type Role = 'employee' | 'manager';
 export type LeaveType = 'annual' | 'sick' | 'unpaid';
 export type LeaveStatus = 'pending' | 'approved' | 'rejected' | 'cancelled';
+export type Decision = 'approve' | 'reject';
 
 export const LEAVE_TYPES: LeaveType[] = ['annual', 'sick', 'unpaid'];
 export const LEAVE_STATUSES: LeaveStatus[] = ['pending', 'approved', 'rejected', 'cancelled'];
@@ -31,4 +32,8 @@ export interface CreateLeave {
   startDate: string;
   endDate: string;
   reason?: string;
+}
+
+export interface PendingLeave extends LeaveRequest {
+  user: { id: string; name: string; email: string };
 }

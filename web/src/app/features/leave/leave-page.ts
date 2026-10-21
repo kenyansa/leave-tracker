@@ -1,21 +1,19 @@
 import { Component, computed, inject, signal } from '@angular/core';
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { switchMap } from 'rxjs';
-import { AuthService } from '../../core/auth.service';
 import { LeaveService } from '../../core/leave.service';
 import { BalanceCard } from './balance-card';
 import { RequestForm } from './request-form';
 import { RequestList } from './request-list';
+import { Header } from '../../shared/header';
 
 @Component({
   selector: 'app-leave-page',
-  imports: [BalanceCard, RequestForm, RequestList],
+  imports: [BalanceCard, RequestForm, RequestList, Header],
   template: `
     <main class="mx-auto max-w-3xl space-y-6 p-4">
-      <header class="flex items-center justify-between">
-        <h1 class="text-2xl font-semibold">My leave</h1>
-        <button (click)="auth.logout()" class="text-sm text-slate-600 underline">Log out</button>
-      </header>
+      <app-header />
+      <h1 class="text-2xl font-semibold">My leave</h1>
 
       <app-balance-card [balances]="balances()" [(year)]="year" />
       <app-request-form (created)="reload()" />
@@ -24,7 +22,6 @@ import { RequestList } from './request-list';
   `,
 })
 export class LeavePage {
-  protected readonly auth = inject(AuthService);
   private readonly leave = inject(LeaveService);
   private readonly version = signal(0);
 
