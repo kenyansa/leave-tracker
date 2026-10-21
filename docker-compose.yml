@@ -5,7 +5,29 @@ services:
       POSTGRES_USER: leave
       POSTGRES_PASSWORD: leave
       POSTGRES_DB: leave_tracker
-    ports: ['5433:5432']
+    ports: ["5433:5432"]
     volumes: [pgdata:/var/lib/postgresql/data]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U leave -d leave_tracker"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  api:
+    build: ./api
+    environment:
+      DATABASE_URL: postgres://leave:leave@db:5432/leave_tracker
+      JWT_SECRET: ${JWT_SECRET:?set JWT_SECRET in a .env file next to this compose file}
+      CORS_ORIGIN: http://localhost:8080
+    ports: ["3000:3000"]
+    depends_on:
+      db:
+        condition: service_healthy
+
+  web:
+    build: ./web
+    ports: ["8080:80"]
+    depends_on: [api]
+
 volumes:
   pgdata:
