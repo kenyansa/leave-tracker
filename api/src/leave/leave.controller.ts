@@ -6,6 +6,8 @@ import {
   ParseUUIDPipe,
   Patch,
   Post,
+  Query,
+  ParseIntPipe,
 } from '@nestjs/common';
 import { CurrentUser, JwtPayload } from '../auth/decorators';
 import { CreateLeaveDto } from './dto/create-leave.dto';
@@ -37,8 +39,11 @@ export class LeaveController {
   }
 
   @Get('balance')
-  balance(@CurrentUser() user: JwtPayload) {
-    return this.leave.balance(user.sub);
+  balance(
+    @CurrentUser() user: JwtPayload,
+    @Query('year', new ParseIntPipe({ optional: true })) year?: number,
+  ) {
+    return this.leave.balance(user.sub, year);
   }
 
   @Get('pending')
