@@ -40,5 +40,7 @@ export class LeaveRequest {
   @Column({ type: 'enum', enum: LeaveStatus, default: LeaveStatus.Pending })
   status!: LeaveStatus;
   @Column({ type: 'text', nullable: true }) reason!: string | null;
+  @Column({ type: 'uuid', nullable: true }) decidedById!: string | null;
+  @Column({ type: 'timestamptz', nullable: true }) decidedAt!: Date | null;
   @CreateDateColumn() createdAt!: Date;
 }
