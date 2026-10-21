@@ -96,9 +96,11 @@ I built this with Claude as a pair-programming partner. I chose the stack (Angul
 
 - A DTO class that redeclared an inherited property failed to compile under TypeScript 6. The compiler caught it, and I split the DTOs.
 - The generated Nest scaffold used ESM settings that clashed with the CommonJS build. I traced it to `tsconfig.json` and `package.json` and reverted to CommonJS.
-- The API couldn't log in to the database because a Postgres already installed on my machine was holding port 5432. I found it with `ss`, and the database container now uses port 5433.
 - The balance endpoint always used the current year. A failing e2e test exposed it, and I added a `?year=` parameter.
 
-**How I verified the code:** the e2e tests run against a real PostgreSQL database, and cover authentication, roles, ownership, overlap and balance rules, and manager scoping. I also tried the failure cases by hand (wrong password, expired token, someone else's request).
+**How I verified the code:** 
+- The e2e tests run against a real PostgreSQL database, and cover authentication, roles, ownership, overlap and balance rules, and manager scoping. I also tried the failure cases by hand (wrong password, expired token, someone else's request).
 
-**What I would not trust AI output for without checking:** security-sensitive code (auth, role checks, query scoping), library versions, and anything involving dates and time zones.
+**What I would not trust AI output for without checking:** 
+
+- Security-sensitive code (auth, role checks, query scoping), library versions, and anything involving dates and time zones.
