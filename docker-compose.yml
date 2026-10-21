@@ -5,7 +5,7 @@ services:
       POSTGRES_USER: leave
       POSTGRES_PASSWORD: leave
       POSTGRES_DB: leave_tracker
-    ports: ["5432:5432"]
+    ports: ['5433:5432']
     volumes: [pgdata:/var/lib/postgresql/data]
 volumes:
   pgdata:
