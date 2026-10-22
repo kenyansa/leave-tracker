@@ -26,6 +26,16 @@ cd web && npm ci && npx ng serve        # http://localhost:4200
 
 `api/.env` needs `DATABASE_URL=postgres://leave:leave@127.0.0.1:5433/leave_tracker` and a `JWT_SECRET`.
 
+## Running Migrations
+
+```bash
+npm run migration:run
+```
+Reverting:
+```bash
+npm run migration:revert
+```
+
 ## Tests
 
 The API has end-to-end tests that run against a real PostgreSQL database.
@@ -77,7 +87,6 @@ flowchart LR
 
 ## Known limitations
 
-- Schema is created with TypeORM `synchronize`. A real deployment needs migrations.
 - Overlap and balance checks can race under simultaneous requests from the same user. The fix is a Postgres exclusion constraint on the date range, or a row lock inside a transaction.
 - The access token lives in `localStorage` and there are no refresh tokens. An httpOnly cookie would be safer against XSS but needs CSRF protection.
 - Days are counted as calendar days, with no weekends or public holidays.
@@ -88,9 +97,11 @@ flowchart LR
 
 I built this with Claude as a pair-programming partner. I chose the stack (Angular, NestJS, Tailwind, PostgreSQL) and the scope, and we worked in small steps: backend first, then frontend, with a commit after each step.
 
-**What AI did:** proposed the project structure and data model, wrote the first version of each module, wrote the e2e test suite, and drafted the Dockerfiles.
+**What AI did:** 
+- It proposed the project structure and data model, wrote the first version of each module, wrote the e2e test suite, and drafted the Dockerfiles.
 
-**What I did:** ran every step myself, tested each endpoint with curl and in the browser before moving on, debugged my local environment, and decided what to keep.
+**What I did:** 
+- I ran every step myself, tested each endpoint with curl and in the browser before moving on, debugged my local environment, and decided what to keep.
 
 **Where it was wrong or incomplete, and how it was caught:**
 
