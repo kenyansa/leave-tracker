@@ -5,7 +5,9 @@ import { User } from './user.entity';
 
 @Injectable()
 export class UsersService {
-  constructor(@InjectRepository(User) private readonly repo: Repository<User>) {}
+  constructor(
+    @InjectRepository(User) private readonly repo: Repository<User>,
+  ) {}
 
   create(data: Partial<User>) {
     return this.repo.save(this.repo.create(data));
@@ -20,5 +22,9 @@ export class UsersService {
       where: { email },
       select: { id: true, role: true, passwordHash: true },
     });
+  }
+
+  findById(id: string) {
+    return this.repo.findOneBy({ id });
   }
 }

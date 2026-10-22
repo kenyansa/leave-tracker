@@ -7,6 +7,8 @@ import { AuthService } from './auth.service';
 import { APP_GUARD } from '@nestjs/core';
 import { JwtAuthGuard } from './jwt-auth.guard';
 import { RolesGuard } from './roles.guard';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { RefreshToken } from './refresh-token.entity';
 
 @Module({
   imports: [
@@ -15,9 +17,10 @@ import { RolesGuard } from './roles.guard';
       inject: [ConfigService],
       useFactory: (config: ConfigService) => ({
         secret: config.getOrThrow('JWT_SECRET'),
-        signOptions: { expiresIn: '1h' },
+        signOptions: { expiresIn: '15m' },
       }),
     }),
+    TypeOrmModule.forFeature([RefreshToken]),
   ],
   controllers: [AuthController],
   providers: [
