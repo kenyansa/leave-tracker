@@ -66,7 +66,16 @@ flowchart LR
 
 **Endpoints**
 
-| Method | Path                                      | Access                |
+| Method | Path                                      | Access                         |
+| ------ | ----------------------------------------- | ------------------------------ |
+| POST   | `/auth/register`, `/auth/login`           | public                         |
+| POST   | `/auth/refresh`                           | public, needs refresh cookie   |
+| POST   | `/auth/logout`                            | public, revokes refresh cookie |
+| GET    | `/leave/me`, `/leave/balance?year=`       | authenticated                  |
+| POST   | `/leave`                                  | authenticated                  |
+| PATCH  | `/leave/:id/cancel`                       | owner, pending only            |
+| GET    | `/leave/pending`                          | manager (own reports)          |
+| PATCH  | `/leave/:id/approve`, `/leave/:id/reject` | manager (own reports)          |
 | ------ | ----------------------------------------- | --------------------- |
 | POST   | `/auth/register`, `/auth/login`           | public                |
 | GET    | `/leave/me`, `/leave/balance?year=`       | authenticated         |
@@ -84,11 +93,15 @@ flowchart LR
 - **Cancel is a status change.** Requests are kept for audit, not deleted.
 - **Server owns the rules.** The frontend reloads from the API after every change and shows the server's error messages, so there is one copy of the business rules.
 - **Registration cannot set a role.** The DTO has no `role` field and unknown fields are stripped.
+- **Short-lived access tokens, rotating refresh tokens.** The access token lives 15 minutes, in memory only. The refresh token is an opaque value in an httpOnly, SameSite=Strict cookie scoped to `/auth`, stored hashed in the database. Each refresh rotates it, and replaying a used token revokes the whole token family.
 
 ## Known limitations
 
+- A failed refresh (including a network blip) signs the user out, and there is no proactive refresh before expiry.
+- Expired and revoked refresh-token rows are never cleaned up. A scheduled job would fix this.
+- Login and refresh have no rate limiting.
+- Migrations run at application start. With several instances, run them as a separate deploy step.
 - Overlap and balance checks can race under simultaneous requests from the same user. The fix is a Postgres exclusion constraint on the date range, or a row lock inside a transaction.
-- The access token lives in `localStorage` and there are no refresh tokens. An httpOnly cookie would be safer against XSS but needs CSRF protection.
 - Days are counted as calendar days, with no weekends or public holidays.
 - No pagination, no registration screen, no user management.
 - The API URL is baked into the frontend build. Production would put both behind one reverse proxy on the same origin.
