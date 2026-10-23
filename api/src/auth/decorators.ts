@@ -7,6 +7,7 @@ import { Role } from '../users/user.entity';
 
 export interface JwtPayload {
   sub: string;
+  name: string;
   role: Role;
 }
 

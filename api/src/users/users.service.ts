@@ -20,7 +20,7 @@ export class UsersService {
   findForLogin(email: string) {
     return this.repo.findOne({
       where: { email },
-      select: { id: true, role: true, passwordHash: true },
+      select: { id: true, name: true, role: true, passwordHash: true },
     });
   }
 

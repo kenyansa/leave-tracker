@@ -52,6 +52,15 @@ describe('Refresh tokens (e2e)', () => {
     expect(res.body).not.toHaveProperty('refreshToken');
   });
 
+  it('includes the registered name in the access token', async () => {
+    const { accessToken } = (await login()).body as { accessToken: string };
+    const payload = JSON.parse(
+      Buffer.from(accessToken.split('.')[1], 'base64url').toString(),
+    ) as { name: string };
+
+    expect(payload.name).toBe('Dana');
+  });
+
   it('rotates the refresh token and returns a working access token', async () => {
     const first = refreshCookie(await login());
     const res = await refresh(first).expect(200);

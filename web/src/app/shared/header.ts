@@ -18,7 +18,10 @@ import { AuthService } from '../core/auth.service';
           <a routerLink="/approvals" routerLinkActive="font-semibold text-indigo-600">Approvals</a>
         }
       </nav>
-      <button (click)="auth.logout()" class="text-sm text-slate-600 underline">Log out</button>
+      <div class="flex flex-col items-end gap-1">
+        <span class="text-sm font-medium text-slate-700">{{ auth.user()?.name }}</span>
+        <button (click)="auth.logout()" class="text-sm text-slate-600 underline">Log out</button>
+      </div>
     </header>
   `,
 })

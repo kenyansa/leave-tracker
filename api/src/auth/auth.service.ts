@@ -72,7 +72,10 @@ export class AuthService {
     if (stored) await this.revokeFamily(stored.familyId);
   }
 
-  private async issue(user: Pick<User, 'id' | 'role'>, familyId: string) {
+  private async issue(
+    user: Pick<User, 'id' | 'name' | 'role'>,
+    familyId: string,
+  ) {
     const refreshToken = randomBytes(32).toString('base64url');
     await this.tokens.save(
       this.tokens.create({
@@ -84,6 +87,7 @@ export class AuthService {
     );
     const accessToken = await this.jwt.signAsync({
       sub: user.id,
+      name: user.name,
       role: user.role,
     });
     return { accessToken, refreshToken };

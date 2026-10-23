@@ -8,6 +8,7 @@ export const LEAVE_STATUSES: LeaveStatus[] = ['pending', 'approved', 'rejected',
 
 export interface JwtPayload {
   sub: string;
+  name: string;
   role: Role;
   exp: number;
 }
