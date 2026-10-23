@@ -31,7 +31,9 @@ cd web && npm ci && npx ng serve        # http://localhost:4200
 ```bash
 npm run migration:run
 ```
+
 Reverting:
+
 ```bash
 npm run migration:revert
 ```
@@ -76,13 +78,6 @@ flowchart LR
 | PATCH  | `/leave/:id/cancel`                       | owner, pending only            |
 | GET    | `/leave/pending`                          | manager (own reports)          |
 | PATCH  | `/leave/:id/approve`, `/leave/:id/reject` | manager (own reports)          |
-| ------ | ----------------------------------------- | --------------------- |
-| POST   | `/auth/register`, `/auth/login`           | public                |
-| GET    | `/leave/me`, `/leave/balance?year=`       | authenticated         |
-| POST   | `/leave`                                  | authenticated         |
-| PATCH  | `/leave/:id/cancel`                       | owner, pending only   |
-| GET    | `/leave/pending`                          | manager (own reports) |
-| PATCH  | `/leave/:id/approve`, `/leave/:id/reject` | manager (own reports) |
 
 ## Design decisions
 
@@ -110,10 +105,12 @@ flowchart LR
 
 I built this with Claude as a pair-programming partner. I chose the stack (Angular, NestJS, Tailwind, PostgreSQL) and the scope, and we worked in small steps: backend first, then frontend, with a commit after each step.
 
-**What AI did:** 
+**What AI did:**
+
 - It proposed the project structure and data model, wrote the first version of each module, wrote the e2e test suite, and drafted the Dockerfiles.
 
-**What I did:** 
+**What I did:**
+
 - I ran every step myself, tested each endpoint with curl and in the browser before moving on, debugged my local environment, and decided what to keep.
 
 **Where it was wrong or incomplete, and how it was caught:**
@@ -122,9 +119,10 @@ I built this with Claude as a pair-programming partner. I chose the stack (Angul
 - The generated Nest scaffold used ESM settings that clashed with the CommonJS build. I traced it to `tsconfig.json` and `package.json` and reverted to CommonJS.
 - The balance endpoint always used the current year. A failing e2e test exposed it, and I added a `?year=` parameter.
 
-**How I verified the code:** 
+**How I verified the code:**
+
 - The e2e tests run against a real PostgreSQL database, and cover authentication, roles, ownership, overlap and balance rules, and manager scoping. I also tried the failure cases by hand (wrong password, expired token, someone else's request).
 
-**What I would not trust AI output for without checking:** 
+**What I would not trust AI output for without checking:**
 
 - Security-sensitive code (auth, role checks, query scoping), library versions, and anything involving dates and time zones.
