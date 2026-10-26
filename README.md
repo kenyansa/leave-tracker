@@ -1,3 +1,4 @@
+![CI](https://github.com/kenyansa/leave-tracker/actions/workflows/ci.yml/badge.svg)
 # Leave Tracker
 
 A small HR leave-management app. Employees request leave and see their balance. Managers approve or reject requests from their direct reports.
